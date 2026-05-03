@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { supabase } from "../utils/supabase";
+import { supabase, supabaseConfigError } from "../utils/supabase";
 
 type FilterValue = "All" | "None" | "Lord" | "Lieutenant" | "Warrior" | "Infantry" | "Archer" | "Cavalry" | "Unranked" | "I" | "IV" | "V";
 
@@ -148,6 +148,10 @@ function App() {
       setRosterStatus("Tirby kayitlari yukleniyor...");
 
       try {
+        if (!supabase) {
+          throw new Error(supabaseConfigError || "Supabase istemcisi baslatilamadi.");
+        }
+
         let houseResponse = await supabase
           .from("houses")
           .select("id, name, slug")
